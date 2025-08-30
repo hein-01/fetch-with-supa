@@ -211,7 +211,7 @@ const PopularBusinesses = () => {
                   }}
                   spaceBetween={0}
                   slidesPerView={1}
-                  loop={false}
+                  loop={true}
                   className="w-[320px] h-[200px] product-carousel"
                 >
                   {business.product_images && business.product_images.length > 0 ? (
@@ -244,7 +244,7 @@ const PopularBusinesses = () => {
                           <ChevronLeft className="w-3 h-3 text-gray-800" />
                         </button>
                         <button 
-                          className={`swiper-button-next-${business.id} absolute right-3 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                          className={`swiper-button-next-${business.id} absolute right-4 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
                           type="button"
                         >
                           <ChevronRight className="w-3 h-3 text-gray-800" />
@@ -429,7 +429,7 @@ const PopularBusinesses = () => {
                     }}
                     spaceBetween={0}
                     slidesPerView={1}
-                    loop={false}
+                    loop={true}
                     className="w-[320px] h-[200px] product-carousel"
                   >
                     {business.product_images && business.product_images.length > 0 ? (
@@ -462,7 +462,7 @@ const PopularBusinesses = () => {
                           <ChevronLeft className="w-3 h-3 text-gray-800" />
                         </button>
                         <button 
-                          className={`swiper-button-next-${business.id} absolute right-3 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                          className={`swiper-button-next-${business.id} absolute right-4 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
                           type="button"
                         >
                           <ChevronRight className="w-3 h-3 text-gray-800" />
