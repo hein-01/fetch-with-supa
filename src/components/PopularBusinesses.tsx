@@ -238,16 +238,16 @@ const PopularBusinesses = () => {
                     {business.product_images && business.product_images.length > 1 && (
                       <>
                         <button 
-                          className={`swiper-button-prev-${business.id} absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                          className={`swiper-button-prev-${business.id} absolute left-3 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
                           type="button"
                         >
-                          <ChevronLeft className="w-4 h-4 text-gray-800" />
+                          <ChevronLeft className="w-3 h-3 text-gray-800" />
                         </button>
                         <button 
-                          className={`swiper-button-next-${business.id} absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                          className={`swiper-button-next-${business.id} absolute right-3 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
                           type="button"
                         >
-                          <ChevronRight className="w-4 h-4 text-gray-800" />
+                          <ChevronRight className="w-3 h-3 text-gray-800" />
                         </button>
                       </>
                     )}
@@ -452,23 +452,23 @@ const PopularBusinesses = () => {
                       </SwiperSlide>
                     )}
                     
-                     {/* Custom Navigation Arrows */}
-                     {business.product_images && business.product_images.length > 1 && (
-                       <>
-                         <button 
-                           className={`swiper-button-prev-${business.id} absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
-                           type="button"
-                         >
-                           <ChevronLeft className="w-4 h-4 text-gray-800" />
-                         </button>
-                         <button 
-                           className={`swiper-button-next-${business.id} absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
-                           type="button"
-                         >
-                           <ChevronRight className="w-4 h-4 text-gray-800" />
-                         </button>
-                       </>
-                     )}
+                    {/* Custom Navigation Arrows */}
+                    {business.product_images && business.product_images.length > 1 && (
+                      <>
+                        <button 
+                          className={`swiper-button-prev-${business.id} absolute left-3 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                          type="button"
+                        >
+                          <ChevronLeft className="w-3 h-3 text-gray-800" />
+                        </button>
+                        <button 
+                          className={`swiper-button-next-${business.id} absolute right-3 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                          type="button"
+                        >
+                          <ChevronRight className="w-3 h-3 text-gray-800" />
+                        </button>
+                      </>
+                    )}
                   </Swiper>
                   
                   <Button
