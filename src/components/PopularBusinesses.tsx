@@ -212,7 +212,7 @@ const PopularBusinesses = () => {
                   spaceBetween={0}
                   slidesPerView={1}
                   loop={true}
-                  className="w-[320px] h-[200px] product-carousel"
+                  className="w-full h-[200px] product-carousel"
                 >
                   {business.product_images && business.product_images.length > 0 ? (
                     business.product_images.map((image, index) => (
@@ -234,29 +234,29 @@ const PopularBusinesses = () => {
                     </SwiperSlide>
                   )}
                   
-                    {/* Custom Navigation Arrows */}
-                    {business.product_images && business.product_images.length > 1 && (
-                      <>
-                        <button 
-                          className={`swiper-button-prev-${business.id} absolute left-3 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
-                          type="button"
-                        >
-                          <ChevronLeft className="w-3 h-3 text-gray-800" />
-                        </button>
-                        <button 
-                          className={`swiper-button-next-${business.id} absolute right-4 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
-                          type="button"
-                        >
-                          <ChevronRight className="w-3 h-3 text-gray-800" />
-                        </button>
-                      </>
-                    )}
+                  {/* Custom Navigation Arrows - only show if multiple images */}
+                  {business.product_images && business.product_images.length > 1 && (
+                    <>
+                      <button 
+                        className={`swiper-button-prev-${business.id} absolute left-2 top-1/2 -translate-y-1/2 z-30 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                        type="button"
+                      >
+                        <ChevronLeft className="w-3 h-3 text-gray-800" />
+                      </button>
+                      <button 
+                        className={`swiper-button-next-${business.id} absolute right-2 top-1/2 -translate-y-1/2 z-30 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                        type="button"
+                      >
+                        <ChevronRight className="w-3 h-3 text-gray-800" />
+                      </button>
+                    </>
+                  )}
                 </Swiper>
                 
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute top-2 right-2 px-1 py-2 h-auto w-6 bg-white/80 hover:bg-white z-20"
+                  className="absolute top-2 right-2 px-1 py-2 h-auto w-6 bg-white/80 hover:bg-white z-40"
                 >
                   <Bookmark className="w-3 h-5 text-gray-600" />
                 </Button>
@@ -419,8 +419,8 @@ const PopularBusinesses = () => {
                   <Swiper
                     modules={[Navigation, Pagination]}
                     navigation={{
-                      nextEl: `.swiper-button-next-${business.id}`,
-                      prevEl: `.swiper-button-prev-${business.id}`,
+                      nextEl: `.swiper-button-next-mobile-${business.id}`,
+                      prevEl: `.swiper-button-prev-mobile-${business.id}`,
                       enabled: true
                     }}
                     pagination={{ 
@@ -430,7 +430,7 @@ const PopularBusinesses = () => {
                     spaceBetween={0}
                     slidesPerView={1}
                     loop={true}
-                    className="w-[320px] h-[200px] product-carousel"
+                    className="w-full h-[200px] product-carousel"
                   >
                     {business.product_images && business.product_images.length > 0 ? (
                       business.product_images.map((image, index) => (
@@ -452,17 +452,17 @@ const PopularBusinesses = () => {
                       </SwiperSlide>
                     )}
                     
-                    {/* Custom Navigation Arrows */}
+                    {/* Custom Navigation Arrows - only show if multiple images */}
                     {business.product_images && business.product_images.length > 1 && (
                       <>
                         <button 
-                          className={`swiper-button-prev-${business.id} absolute left-3 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                          className={`swiper-button-prev-mobile-${business.id} absolute left-2 top-1/2 -translate-y-1/2 z-30 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
                           type="button"
                         >
                           <ChevronLeft className="w-3 h-3 text-gray-800" />
                         </button>
                         <button 
-                          className={`swiper-button-next-${business.id} absolute right-4 top-1/2 -translate-y-1/2 z-20 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
+                          className={`swiper-button-next-mobile-${business.id} absolute right-2 top-1/2 -translate-y-1/2 z-30 w-6 h-6 bg-white/95 rounded-full flex items-center justify-center cursor-pointer hover:bg-white transition-all duration-200 shadow-lg border border-gray-200`}
                           type="button"
                         >
                           <ChevronRight className="w-3 h-3 text-gray-800" />
@@ -474,7 +474,7 @@ const PopularBusinesses = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="absolute top-2 right-2 px-1 py-2 h-auto w-6 bg-white/80 hover:bg-white z-20"
+                    className="absolute top-2 right-2 px-1 py-2 h-auto w-6 bg-white/80 hover:bg-white z-40"
                   >
                     <Bookmark className="w-3 h-5 text-gray-600" />
                   </Button>
