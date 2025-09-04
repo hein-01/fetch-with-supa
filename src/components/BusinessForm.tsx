@@ -304,6 +304,8 @@ export default function BusinessForm({ onSuccess, editingBusiness }: BusinessFor
         license_expired_date: formData.licenseExpiredDate || null,
         product_images: allProductImages.length > 0 ? allProductImages : null,
         receipt_url: receiptUrl || editingBusiness?.receipt_url || null,
+        payment_status: receiptUrl ? 'to_be_confirmed' : (editingBusiness?.payment_status || 'to_be_confirmed'),
+        last_payment_date: receiptUrl ? new Date().toISOString() : editingBusiness?.last_payment_date,
         "POS+Website": formData.onlineShopOption === 'sure' ? 1 : 0
       };
 

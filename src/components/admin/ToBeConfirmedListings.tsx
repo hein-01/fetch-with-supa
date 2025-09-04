@@ -35,7 +35,19 @@ export default function ToBeConfirmedListings() {
   const fetchPendingListings = async () => {
     try {
       const { data, error } = await supabase
-        .rpc('get_pending_businesses_with_emails');
+        .from('businesses')
+        .select(`
+          id,
+          name,
+          owner_id,
+          user_email,
+          receipt_url,
+          payment_status,
+          created_at,
+          listing_expired_date
+        `)
+        .not('receipt_url', 'is', null)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setListings(data || []);
