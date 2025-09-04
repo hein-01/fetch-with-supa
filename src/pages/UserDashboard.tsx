@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { PopularBusinessCard } from "@/components/PopularBusinessCard";
 import { supabase } from "@/integrations/supabase/client";
 import BusinessForm from "@/components/BusinessForm";
+import UpgradeModal from "@/components/UpgradeModal";
 import { addDays, format } from "date-fns";
 import { 
   User, 
@@ -16,7 +17,8 @@ import {
   CreditCard, 
   LogOut,
   Home,
-  Edit
+  Edit,
+  ArrowUp
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
@@ -34,6 +36,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const sidebarItems = [
   { title: "Dashboard", icon: Home, action: "dashboard" },
@@ -41,6 +51,7 @@ const sidebarItems = [
   { title: "Add Listing", icon: Plus, action: "add-listing" },
   { title: "Get Website + POS", icon: Globe, action: "website-pos" },
   { title: "My Listings", icon: Building2, action: "listings" },
+  { title: "Upgrade Listings", icon: ArrowUp, action: "upgrade" },
   { title: "Subscriptions", icon: CreditCard, action: "subscription" },
   { title: "Profile Info", icon: User, action: "profile" },
   { title: "Email Settings", icon: Mail, action: "email" },
@@ -58,6 +69,8 @@ export default function UserDashboard() {
   const [loadingBookmarks, setLoadingBookmarks] = React.useState(false);
   const [businessCount, setBusinessCount] = React.useState(0);
   const [bookmarkCount, setBookmarkCount] = React.useState(0);
+  const [upgradeModalOpen, setUpgradeModalOpen] = React.useState(false);
+  const [selectedBusiness, setSelectedBusiness] = React.useState(null);
 
   const fetchUserBusinesses = async () => {
     if (!user?.id) return;
@@ -206,7 +219,7 @@ export default function UserDashboard() {
     
     if (action === "website-pos") {
       navigate("/list-&-get-pos-website");
-    } else if (action === "listings" || action === "subscription") {
+    } else if (action === "listings" || action === "subscription" || action === "upgrade") {
       fetchUserBusinesses();
     } else if (action === "wishlists") {
       console.log('Wishlists section selected, fetching bookmarks');
@@ -400,6 +413,94 @@ export default function UserDashboard() {
               setActiveSection("listings");
               fetchUserBusinesses();
             }} />
+          </div>
+        );
+
+      case "upgrade":
+        const currentDate = new Date();
+        
+        return (
+          <div className="space-y-6 animate-fade-in">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-dashboard-gradient-start to-dashboard-gradient-end bg-clip-text text-transparent">Upgrade Listings</h2>
+            {loadingBusinesses ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">Loading your businesses...</p>
+              </div>
+            ) : userBusinesses.length > 0 ? (
+              <Card>
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Business Name</TableHead>
+                        <TableHead>Listing Expires</TableHead>
+                        <TableHead>Odoo Expires</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {userBusinesses.map((business) => {
+                        const listingExpired = business.listing_expired_date && new Date(business.listing_expired_date) < currentDate;
+                        const odooExpired = business.odoo_expired_date && new Date(business.odoo_expired_date) < currentDate;
+                        const canUpgrade = listingExpired || odooExpired;
+                        
+                        return (
+                          <TableRow key={business.id}>
+                            <TableCell className="font-medium">{business.name}</TableCell>
+                            <TableCell>
+                              {business.listing_expired_date ? (
+                                <span className={listingExpired ? 'text-destructive' : 'text-muted-foreground'}>
+                                  {new Date(business.listing_expired_date).toLocaleDateString()}
+                                </span>
+                              ) : (
+                                <span className="text-muted-foreground">No expiry</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {business.odoo_expired_date ? (
+                                <span className={odooExpired ? 'text-destructive' : 'text-muted-foreground'}>
+                                  {new Date(business.odoo_expired_date).toLocaleDateString()}
+                                </span>
+                              ) : (
+                                <span className="text-muted-foreground">N/A</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                size="sm"
+                                disabled={!canUpgrade}
+                                onClick={() => {
+                                  setSelectedBusiness(business);
+                                  setUpgradeModalOpen(true);
+                                }}
+                                className={canUpgrade ? "bg-primary hover:bg-primary/90" : ""}
+                              >
+                                Upgrade
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardContent className="pt-6">
+                  <p className="text-muted-foreground text-center py-8">
+                    No business listings found. 
+                    <Button 
+                      variant="link" 
+                      className="ml-2 p-0 h-auto"
+                      onClick={() => setActiveSection("add-listing")}
+                    >
+                      Create your first listing
+                    </Button>
+                  </p>
+                </CardContent>
+              </Card>
+            )}
           </div>
         );
 
@@ -757,6 +858,15 @@ export default function UserDashboard() {
           </main>
         </SidebarProvider>
       </div>
+      
+      
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        businessId={selectedBusiness?.id || ''}
+        businessName={selectedBusiness?.name || ''}
+      />
       
       {/* Edit Business Modal */}
       <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
