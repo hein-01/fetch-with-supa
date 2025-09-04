@@ -24,6 +24,9 @@ interface Business {
   payment_status: string;
   created_at: string;
   listing_expired_date: string;
+  last_payment_date: string;
+  odoo_expired_date: string;
+  "POS+Website": number;
 }
 
 export default function ToBeConfirmedListings() {
@@ -44,7 +47,10 @@ export default function ToBeConfirmedListings() {
           receipt_url,
           payment_status,
           created_at,
-          listing_expired_date
+          listing_expired_date,
+          last_payment_date,
+          odoo_expired_date,
+          "POS+Website"
         `)
         .not('receipt_url', 'is', null)
         .order('created_at', { ascending: false });
@@ -65,9 +71,45 @@ export default function ToBeConfirmedListings() {
 
   const confirmPayment = async (businessId: string) => {
     try {
+      // Get business details first to calculate dates
+      const { data: business, error: fetchError } = await supabase
+        .from('businesses')
+        .select('last_payment_date, "POS+Website"')
+        .eq('id', businessId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      if (!business?.last_payment_date) {
+        toast({
+          title: "Error",
+          description: "No payment date found for this business",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Calculate new dates
+      const paymentDate = new Date(business.last_payment_date);
+      const newListingExpiredDate = new Date(paymentDate);
+      newListingExpiredDate.setDate(newListingExpiredDate.getDate() + 365);
+
+      let updateData: any = {
+        payment_status: 'confirmed',
+        receipt_url: null,
+        listing_expired_date: newListingExpiredDate.toISOString().split('T')[0]
+      };
+
+      // If POS+Website is 1, also update odoo_expired_date
+      if (business["POS+Website"] === 1) {
+        const newOdooExpiredDate = new Date(paymentDate);
+        newOdooExpiredDate.setDate(newOdooExpiredDate.getDate() + 30);
+        updateData.odoo_expired_date = newOdooExpiredDate.toISOString();
+      }
+
       const { error } = await supabase
         .from('businesses')
-        .update({ payment_status: 'confirmed' })
+        .update(updateData)
         .eq('id', businessId);
 
       if (error) throw error;
@@ -237,6 +279,7 @@ export default function ToBeConfirmedListings() {
                   <TableHead>Payment Status</TableHead>
                   <TableHead>Submitted</TableHead>
                   <TableHead>Listing Expired Date</TableHead>
+                  <TableHead>Odoo Expired Date</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -294,6 +337,12 @@ export default function ToBeConfirmedListings() {
                           <span>Save</span>
                         </Button>
                       </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {listing.odoo_expired_date 
+                        ? new Date(listing.odoo_expired_date).toLocaleDateString()
+                        : listing["POS+Website"] === 1 ? 'Will be set on confirm' : 'N/A'
+                      }
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
