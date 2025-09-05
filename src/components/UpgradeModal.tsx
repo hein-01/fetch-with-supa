@@ -14,9 +14,10 @@ interface UpgradeModalProps {
   onClose: () => void;
   businessId: string;
   businessName: string;
+  onSuccess?: () => void;
 }
 
-export default function UpgradeModal({ isOpen, onClose, businessId, businessName }: UpgradeModalProps) {
+export default function UpgradeModal({ isOpen, onClose, businessId, businessName, onSuccess }: UpgradeModalProps) {
   const [totalAmount, setTotalAmount] = useState("");
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -92,8 +93,9 @@ export default function UpgradeModal({ isOpen, onClose, businessId, businessName
         description: "Receipt uploaded successfully. Your upgrade request has been submitted for admin confirmation.",
       });
 
-      // Close the modal immediately after successful submission
+      // Close the modal and refresh the page after successful submission
       onClose();
+      onSuccess?.();
     } catch (error) {
       console.error('Error uploading receipt:', error);
       toast({

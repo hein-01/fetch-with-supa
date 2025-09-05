@@ -788,6 +788,7 @@ export default function UserDashboard() {
         onClose={() => setUpgradeModalOpen(false)}
         businessId={selectedBusiness?.id || ''}
         businessName={selectedBusiness?.name || ''}
+        onSuccess={() => window.location.reload()}
       />
       
       {/* Edit Business Modal */}
