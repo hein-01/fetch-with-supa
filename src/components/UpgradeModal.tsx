@@ -46,6 +46,15 @@ export default function UpgradeModal({ isOpen, onClose, businessId, businessName
 
     setLoading(true);
     try {
+      // First, get the current business data to check listing_expired_date
+      const { data: currentBusiness, error: fetchError } = await supabase
+        .from('businesses')
+        .select('listing_expired_date')
+        .eq('id', businessId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
       // Upload receipt to Supabase storage
       const fileExt = receiptFile.name.split('.').pop();
       const fileName = `${businessId}-${Date.now()}.${fileExt}`;
@@ -65,28 +74,39 @@ export default function UpgradeModal({ isOpen, onClose, businessId, businessName
       const odooExpiredDate = new Date();
       odooExpiredDate.setDate(odooExpiredDate.getDate() + 30);
 
-      // Update business with new receipt URL, payment status, POS+Website option, and odoo_expired_date
+      // Check if listing_expired_date needs to be updated (if it's in the past)
+      const currentDate = new Date();
+      const updateData: any = {
+        receipt_url: urlData.publicUrl,
+        payment_status: 'to_be_confirmed',
+        last_payment_date: new Date().toISOString(),
+        odoo_expired_date: odooExpiredDate.toISOString(),
+        'POS+Website': 1
+      };
+
+      // If listing_expired_date is in the past, update it to today + 365 days
+      if (currentBusiness.listing_expired_date && new Date(currentBusiness.listing_expired_date) < currentDate) {
+        const newListingExpiredDate = new Date();
+        newListingExpiredDate.setDate(newListingExpiredDate.getDate() + 365);
+        updateData.listing_expired_date = newListingExpiredDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+      }
+
+      // Update business with new receipt URL, payment status, POS+Website option, and dates
       const { error: updateError } = await supabase
         .from('businesses')
-        .update({
-          receipt_url: urlData.publicUrl,
-          payment_status: 'to_be_confirmed',
-          last_payment_date: new Date().toISOString(),
-          odoo_expired_date: odooExpiredDate.toISOString(),
-          'POS+Website': 1
-        })
+        .update(updateData)
         .eq('id', businessId);
 
       if (updateError) throw updateError;
 
       // Fetch the updated business to get the new odoo_expired_date
-      const { data: updatedBusiness, error: fetchError } = await supabase
+      const { data: updatedBusiness, error: updateFetchError } = await supabase
         .from('businesses')
         .select('odoo_expired_date')
         .eq('id', businessId)
         .single();
 
-      if (fetchError) throw fetchError;
+      if (updateFetchError) throw updateFetchError;
 
       toast({
         title: "Success",
