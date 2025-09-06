@@ -99,8 +99,20 @@ export default function BusinessForm({ onSuccess, editingBusiness }: BusinessFor
     options: editingBusiness?.business_options || [],
     productsCatalog: editingBusiness?.products_catalog ? editingBusiness.products_catalog.split(', ') : [],
     onlineShopOption: "sure",
-    paymentOption: "stripe"
+    paymentOption: "bank"
   });
+
+  // Calculate total price based on selected options
+  const calculateTotalPrice = () => {
+    const listingPriceNum = parseFloat(listingPrice.replace(/[^0-9.]/g, '')) || 0;
+    const odooPriceNum = parseFloat(odooPrice.replace(/[^0-9.]/g, '')) || 0;
+    
+    if (formData.onlineShopOption === 'sure') {
+      return listingPriceNum + odooPriceNum;
+    } else {
+      return listingPriceNum;
+    }
+  };
 
   // Fetch plan prices when component mounts
   useEffect(() => {
@@ -840,6 +852,9 @@ export default function BusinessForm({ onSuccess, editingBusiness }: BusinessFor
 
             {formData.paymentOption === 'bank' && (
               <div className="space-y-4 ml-6 p-4 bg-muted/50 rounded-lg">
+                <p className="text-sm font-medium text-primary">
+                  The total is ${calculateTotalPrice().toFixed(2)}
+                </p>
                 <p className="text-sm text-muted-foreground">
                   Please make payment to Bank ABC 1234567, or True Money 610123456
                 </p>
