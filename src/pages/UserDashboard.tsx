@@ -70,6 +70,8 @@ export default function UserDashboard() {
   const [bookmarkCount, setBookmarkCount] = React.useState(0);
   const [upgradeModalOpen, setUpgradeModalOpen] = React.useState(false);
   const [selectedBusiness, setSelectedBusiness] = React.useState(null);
+  const [listingPrice, setListingPrice] = React.useState("");
+  const [odooPrice, setOdooPrice] = React.useState("");
 
   const fetchUserBusinesses = async () => {
     if (!user?.id) return;
@@ -124,10 +126,33 @@ export default function UserDashboard() {
     }
   };
 
+  // Fetch plan prices when component mounts
+  const fetchPlanPrices = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('plans')
+        .select('name, pricing');
+      
+      if (error) {
+        console.error('Error fetching plan prices:', error);
+        return;
+      }
+      
+      const listingPlan = data?.find(plan => plan.name === 'Listing');
+      const odooPlan = data?.find(plan => plan.name === 'Odoo');
+      
+      setListingPrice(listingPlan?.pricing || '');
+      setOdooPrice(odooPlan?.pricing || '');
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   React.useEffect(() => {
     if (user?.id) {
       fetchDashboardCounts();
       fetchUserBusinesses();
+      fetchPlanPrices();
     }
   }, [user?.id]);
 
@@ -485,6 +510,8 @@ export default function UserDashboard() {
                       <TableHeader>
                         <TableRow>
                           <TableHead>Business Name</TableHead>
+                          <TableHead>Listing Price</TableHead>
+                          <TableHead>Odoo Price</TableHead>
                           <TableHead>Listing Expires</TableHead>
                           <TableHead>Odoo Expires</TableHead>
                           <TableHead>Actions</TableHead>
@@ -500,6 +527,16 @@ export default function UserDashboard() {
                           return (
                             <TableRow key={business.id}>
                               <TableCell className="font-medium">{business.name}</TableCell>
+                              <TableCell>
+                                <span className="text-muted-foreground">
+                                  {listingPrice || 'Loading...'}
+                                </span>
+                              </TableCell>
+                              <TableCell>
+                                <span className="text-muted-foreground">
+                                  {odooPrice || 'Loading...'}
+                                </span>
+                              </TableCell>
                               <TableCell>
                                 {business.listing_expired_date ? (
                                   <span className={listingExpired ? 'text-destructive' : 'text-muted-foreground'}>
