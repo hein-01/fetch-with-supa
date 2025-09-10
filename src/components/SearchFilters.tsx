@@ -25,6 +25,7 @@ export const SearchFilters = ({
   initialCategory = "all",
 }: SearchFiltersProps) => {
   const [search, setSearch] = useState(initialSearchTerm);
+  const [selectedDelivery, setSelectedDelivery] = useState<string | null>(null);
 
   useEffect(() => {
     setSearch(initialSearchTerm);
@@ -88,8 +89,16 @@ export const SearchFilters = ({
             <Button 
               type="button" 
               variant="outline" 
-              className="border-2 shadow-md hover:shadow-lg transition-shadow duration-200 hover:text-primary hover:border-primary hover:bg-primary/10 active:text-primary active:border-primary active:bg-primary/10"
-              onClick={() => onDeliveryFilter?.("cash_on_delivery")}
+              className={`border-2 shadow-md hover:shadow-lg transition-all duration-200 ${
+                selectedDelivery === "cash_on_delivery" 
+                  ? "text-primary border-primary bg-primary/10" 
+                  : "hover:text-primary hover:border-primary hover:bg-primary/10"
+              }`}
+              onClick={() => {
+                const newSelection = selectedDelivery === "cash_on_delivery" ? null : "cash_on_delivery";
+                setSelectedDelivery(newSelection);
+                onDeliveryFilter?.(newSelection || "");
+              }}
             >
               <Truck className="h-4 w-4 mr-2" />
               Cash on Delivery
@@ -98,8 +107,16 @@ export const SearchFilters = ({
             <Button 
               type="button" 
               variant="outline" 
-              className="border-2 shadow-md hover:shadow-lg transition-shadow duration-200 hover:text-primary hover:border-primary hover:bg-primary/10 active:text-primary active:border-primary active:bg-primary/10"
-              onClick={() => onDeliveryFilter?.("store_pickup")}
+              className={`border-2 shadow-md hover:shadow-lg transition-all duration-200 ${
+                selectedDelivery === "store_pickup" 
+                  ? "text-primary border-primary bg-primary/10" 
+                  : "hover:text-primary hover:border-primary hover:bg-primary/10"
+              }`}
+              onClick={() => {
+                const newSelection = selectedDelivery === "store_pickup" ? null : "store_pickup";
+                setSelectedDelivery(newSelection);
+                onDeliveryFilter?.(newSelection || "");
+              }}
             >
               <Store className="h-4 w-4 mr-2" />
               Store Pick Up
@@ -111,6 +128,7 @@ export const SearchFilters = ({
               className="border-2 shadow-md hover:shadow-lg transition-shadow duration-200"
               onClick={() => {
                 setSearch("");
+                setSelectedDelivery(null);
                 onSearchChange("");
                 onLocationChange("");
                 onCategoryChange("all");
