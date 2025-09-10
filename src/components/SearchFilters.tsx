@@ -25,7 +25,7 @@ export const SearchFilters = ({
   initialCategory = "all",
 }: SearchFiltersProps) => {
   const [search, setSearch] = useState(initialSearchTerm);
-  const [selectedDelivery, setSelectedDelivery] = useState<string | null>(null);
+  const [selectedDelivery, setSelectedDelivery] = useState<string[]>([]);
 
   useEffect(() => {
     setSearch(initialSearchTerm);
@@ -90,14 +90,16 @@ export const SearchFilters = ({
               type="button" 
               variant="outline" 
               className={`border-2 shadow-md hover:shadow-lg transition-all duration-200 ${
-                selectedDelivery === "cash_on_delivery" 
-                  ? "text-primary border-primary bg-primary/10" 
-                  : "hover:text-primary hover:border-primary hover:bg-primary/10"
+                selectedDelivery.includes("cash_on_delivery") 
+                  ? "text-green-700 border-green-500 bg-green-50" 
+                  : "hover:text-green-700 hover:border-green-500 hover:bg-green-50"
               }`}
               onClick={() => {
-                const newSelection = selectedDelivery === "cash_on_delivery" ? null : "cash_on_delivery";
+                const newSelection = selectedDelivery.includes("cash_on_delivery")
+                  ? selectedDelivery.filter(item => item !== "cash_on_delivery")
+                  : [...selectedDelivery, "cash_on_delivery"];
                 setSelectedDelivery(newSelection);
-                onDeliveryFilter?.(newSelection || "");
+                onDeliveryFilter?.(newSelection.join(","));
               }}
             >
               <Truck className="h-4 w-4 mr-2" />
@@ -108,14 +110,16 @@ export const SearchFilters = ({
               type="button" 
               variant="outline" 
               className={`border-2 shadow-md hover:shadow-lg transition-all duration-200 ${
-                selectedDelivery === "store_pickup" 
-                  ? "text-primary border-primary bg-primary/10" 
-                  : "hover:text-primary hover:border-primary hover:bg-primary/10"
+                selectedDelivery.includes("store_pickup") 
+                  ? "text-blue-700 border-blue-500 bg-blue-50" 
+                  : "hover:text-blue-700 hover:border-blue-500 hover:bg-blue-50"
               }`}
               onClick={() => {
-                const newSelection = selectedDelivery === "store_pickup" ? null : "store_pickup";
+                const newSelection = selectedDelivery.includes("store_pickup")
+                  ? selectedDelivery.filter(item => item !== "store_pickup")
+                  : [...selectedDelivery, "store_pickup"];
                 setSelectedDelivery(newSelection);
-                onDeliveryFilter?.(newSelection || "");
+                onDeliveryFilter?.(newSelection.join(","));
               }}
             >
               <Store className="h-4 w-4 mr-2" />
@@ -128,7 +132,7 @@ export const SearchFilters = ({
               className="border-2 shadow-md hover:shadow-lg transition-shadow duration-200"
               onClick={() => {
                 setSearch("");
-                setSelectedDelivery(null);
+                setSelectedDelivery([]);
                 onSearchChange("");
                 onLocationChange("");
                 onCategoryChange("all");
