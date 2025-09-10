@@ -22,7 +22,7 @@ interface FiltersModalProps {
   onSearchChange: (search: string) => void;
   onCategoryChange: (category: string) => void;
   onLocationChange: (location: string) => void;
-  onProductChange?: (product: string) => void;
+  onProductChange?: (products: string[] | string) => void;
   categories: string[];
   initialSearchTerm?: string;
   initialCategory?: string;
@@ -43,7 +43,7 @@ export const FiltersModal = ({
 }: FiltersModalProps) => {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState(initialCategory);
-  const [product, setProduct] = useState(initialProduct);
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([initialProduct || "All Products"]);
   const [categoryProducts, setCategoryProducts] = useState<Record<string, string[]>>({
     "all": ["All Products"]
   });
@@ -85,26 +85,46 @@ export const FiltersModal = ({
   const currentProducts = categoryProducts[category] || ["All Products"];
 
   // Check if filters are active
-  const isFiltersActive = category !== "all" || (product !== "all" && product !== "All Products");
+  const isFiltersActive = category !== "all" || (selectedProducts.length > 1 || (selectedProducts.length === 1 && selectedProducts[0] !== "All Products"));
 
   useEffect(() => {
     // Reset product selection when category changes
     if (category === "all") {
-      setProduct("all");
+      setSelectedProducts(["All Products"]);
     } else if (currentProducts.length > 0) {
-      setProduct(currentProducts[0]);
+      setSelectedProducts([currentProducts[0]]);
     }
-  }, [category]);
+  }, [category, currentProducts]);
+
+  const handleProductSelect = (product: string) => {
+    if (product === "All Products") {
+      setSelectedProducts(["All Products"]);
+    } else {
+      setSelectedProducts(prev => {
+        // Remove "All Products" if selecting individual products
+        const filtered = prev.filter(p => p !== "All Products");
+        
+        if (filtered.includes(product)) {
+          // Remove product if already selected
+          const newSelection = filtered.filter(p => p !== product);
+          return newSelection.length === 0 ? ["All Products"] : newSelection;
+        } else {
+          // Add product to selection
+          return [...filtered, product];
+        }
+      });
+    }
+  };
 
   const handleSearch = () => {
     onCategoryChange(category);
-    onProductChange?.(product);
+    onProductChange?.(selectedProducts.length === 1 && selectedProducts[0] === "All Products" ? "all" : selectedProducts);
     setOpen(false);
   };
 
   const handleReset = () => {
     setCategory("all");
-    setProduct("all");
+    setSelectedProducts(["All Products"]);
     onCategoryChange("all");
     onProductChange?.("all");
   };
@@ -200,14 +220,17 @@ export const FiltersModal = ({
                       <CarouselItem key={prod} className="pl-2 basis-auto">
                         <button
                           type="button"
-                          onClick={() => setProduct(prod)}
+                          onClick={() => handleProductSelect(prod)}
                           className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm whitespace-nowrap ${
-                            product === prod
+                            selectedProducts.includes(prod)
                               ? "bg-blue-100 text-blue-700 shadow-md"
                               : "bg-gray-100 text-gray-700 hover:bg-gray-200 shadow-sm"
                           }`}
                         >
                           {prod}
+                          {selectedProducts.includes(prod) && prod !== "All Products" && (
+                            <span className="ml-2 text-blue-600">✓</span>
+                          )}
                         </button>
                       </CarouselItem>
                     ))}
