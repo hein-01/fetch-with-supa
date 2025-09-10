@@ -88,7 +88,7 @@ export const SearchFilters = ({
             <Button 
               type="button" 
               variant="outline" 
-              className="border-2 shadow-md hover:shadow-lg transition-shadow duration-200 hover:text-primary hover:border-primary hover:bg-primary/10"
+              className="border-2 shadow-md hover:shadow-lg transition-shadow duration-200 hover:text-primary hover:border-primary hover:bg-primary/10 active:text-primary active:border-primary active:bg-primary/10"
               onClick={() => onDeliveryFilter?.("cash_on_delivery")}
             >
               <Truck className="h-4 w-4 mr-2" />
@@ -98,7 +98,7 @@ export const SearchFilters = ({
             <Button 
               type="button" 
               variant="outline" 
-              className="border-2 shadow-md hover:shadow-lg transition-shadow duration-200 hover:text-primary hover:border-primary hover:bg-primary/10"
+              className="border-2 shadow-md hover:shadow-lg transition-shadow duration-200 hover:text-primary hover:border-primary hover:bg-primary/10 active:text-primary active:border-primary active:bg-primary/10"
               onClick={() => onDeliveryFilter?.("store_pickup")}
             >
               <Store className="h-4 w-4 mr-2" />
