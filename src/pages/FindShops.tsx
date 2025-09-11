@@ -176,10 +176,6 @@ export default function FindShops() {
           onDeliveryFilter={(type) => {
             // Handle delivery filter logic here
             console.log("Delivery filter:", type);
-            toast({
-              title: "Filter Applied",
-              description: `Filtering by ${type === "cash_on_delivery" ? "Cash on Delivery" : "Store Pick Up"}`,
-            });
           }}
           categories={categories}
           initialSearchTerm={searchTerm}
