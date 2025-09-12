@@ -151,6 +151,7 @@ export const SearchFilters = ({
                 onSearchChange("");
                 onLocationChange("");
                 onCategoryChange("all");
+                onProductChange?.([]);
               }}
             >
               Clear Filters
