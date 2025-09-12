@@ -38,12 +38,12 @@ export const FiltersModal = ({
   categories,
   initialSearchTerm = "",
   initialCategory = "all",
-  initialProduct = "all",
+  initialProduct = "All Products",
   children,
 }: FiltersModalProps) => {
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState(initialCategory);
-  const [selectedProducts, setSelectedProducts] = useState<string[]>([initialProduct || "All Products"]);
+  const [category, setCategory] = useState("all");
+  const [selectedProducts, setSelectedProducts] = useState<string[]>(["All Products"]);
   const [categoryProducts, setCategoryProducts] = useState<Record<string, string[]>>({
     "all": ["All Products"]
   });
