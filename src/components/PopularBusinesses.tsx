@@ -12,13 +12,13 @@ import { supabase } from '@/integrations/supabase/client';
 interface Business {
   id: string;
   name: string;
-  description: string;
-  category: string;
-  city: string;
-  state: string;
-  rating: number;
-  image_url: string;
-  website: string;
+  description?: string;
+  category?: string;
+  city?: string;
+  state?: string;
+  rating?: number;
+  image_url?: string;
+  website?: string;
   product_images?: string[] | null;
   business_options?: string[] | null;
   starting_price?: string | null;
@@ -28,6 +28,7 @@ interface Business {
   tiktok_url?: string | null;
   phone?: string | null;
 }
+
 
 const PopularBusinesses = () => {
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -43,23 +44,7 @@ const PopularBusinesses = () => {
       const { data, error } = await supabase
         .from('businesses')
         .select(`
-          id,
-          name,
-          description,
-          category,
-          city,
-          state,
-          rating,
-          image_url,
-          website,
-          product_images,
-          business_options,
-          starting_price,
-          license_expired_date,
-          products_catalog,
-          facebook_page,
-          tiktok_url,
-          phone
+          *
         `)
         .order('created_at', { ascending: false })
         .limit(5);

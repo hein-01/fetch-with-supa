@@ -29,6 +29,7 @@ export const SearchFilters = ({
 }: SearchFiltersProps) => {
   const [search, setSearch] = useState(initialSearchTerm);
   const [selectedDelivery, setSelectedDelivery] = useState<string[]>([]);
+  const [resetVersion, setResetVersion] = useState(0);
 
   useEffect(() => {
     setSearch(initialSearchTerm);
@@ -60,7 +61,7 @@ export const SearchFilters = ({
               />
             </form>
             
-            <LocationsModal onLocationChange={onLocationChange}>
+            <LocationsModal key={`locations-${resetVersion}`} onLocationChange={onLocationChange}>
               <Button 
                 type="button" 
                 variant="outline"
@@ -71,7 +72,7 @@ export const SearchFilters = ({
               </Button>
             </LocationsModal>
             
-            <FiltersModal
+            <FiltersModal key={`filters-${resetVersion}`}
               onSearchChange={onSearchChange}
               onCategoryChange={onCategoryChange}
               onLocationChange={onLocationChange}
@@ -79,6 +80,7 @@ export const SearchFilters = ({
               categories={categories}
               initialSearchTerm={initialSearchTerm}
               initialCategory={initialCategory}
+              initialProduct={"All Products"}
             >
               <Button 
                 type="button" 
@@ -152,6 +154,7 @@ export const SearchFilters = ({
                 onLocationChange("");
                 onCategoryChange("all");
                 onProductChange?.([]);
+                setResetVersion((v) => v + 1);
               }}
             >
               Clear Filters
