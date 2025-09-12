@@ -39,6 +39,7 @@ export default function FindShops() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [locationFilter, setLocationFilter] = useState("");
+  const [deliveryFilter, setDeliveryFilter] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const { toast } = useToast();
@@ -60,7 +61,7 @@ export default function FindShops() {
     setHasMore(true);
     // Always fetch businesses - either with filters or show all
     fetchBusinesses(true);
-  }, [searchTerm, selectedCategory, selectedProducts, locationFilter]);
+  }, [searchTerm, selectedCategory, selectedProducts, locationFilter, deliveryFilter]);
 
   const fetchCategories = async () => {
     try {
@@ -150,6 +151,12 @@ export default function FindShops() {
         }
       }
 
+      // Apply delivery filter
+      if (deliveryFilter.length > 0) {
+        const deliveryQueries = deliveryFilter.map(option => `business_options.cs.{${option}}`);
+        query = query.or(deliveryQueries.join(','));
+      }
+
       const { data, error } = await query;
 
       if (error) throw error;
@@ -216,8 +223,8 @@ export default function FindShops() {
             }
           }}
           onDeliveryFilter={(type) => {
-            // Handle delivery filter logic here
-            console.log("Delivery filter:", type);
+            const filters = type ? type.split(',').filter(f => f.trim()) : [];
+            setDeliveryFilter(filters);
           }}
           categories={categoryNames}
           initialSearchTerm={searchTerm}

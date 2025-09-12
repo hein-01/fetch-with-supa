@@ -154,6 +154,7 @@ export const SearchFilters = ({
                 onLocationChange("");
                 onCategoryChange("all");
                 onProductChange?.([]);
+                onDeliveryFilter?.(""); // Reset delivery filters
                 setResetVersion((v) => v + 1);
               }}
             >
