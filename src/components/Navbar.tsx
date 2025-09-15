@@ -35,26 +35,22 @@ export const Navbar = React.memo(() => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Left Side - Logo and Find Shops */}
-          <div className="flex items-center space-x-6">
-            <Link to="/" className="flex items-center space-x-2 relative z-50">
+          {/* Left Side - Logo */}
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center space-x-2 relative z-50 md:ml-6">
               <Building2 className="h-6 w-6 text-primary border border-gray-300 rounded p-1" />
               <span className="text-xl font-bold text-foreground animate-pulse bg-gradient-to-r from-primary via-blue-500 to-purple-500 bg-clip-text text-transparent animate-[glow_2s_ease-in-out_infinite_alternate] drop-shadow-[0_0_10px_theme(colors.primary)]">wellfinds</span>
             </Link>
-            
-            {/* Find Shops next to logo */}
-            <div className="hidden md:flex relative z-50">
-              <Link
-                to="/find-shops"
-                className="text-muted-foreground hover:text-foreground font-medium"
-              >
-                🏪 Find Shops
-              </Link>
-            </div>
           </div>
 
           {/* Desktop Right Side Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            <Link
+              to="/find-shops"
+              className="text-muted-foreground hover:text-foreground font-medium"
+            >
+              🏪 Find Shops
+            </Link>
             <Button variant="ghost" size="sm" className="flex items-center space-x-1">
               <Smartphone className="h-4 w-4" />
               <span>Get App</span>
