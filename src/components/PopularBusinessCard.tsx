@@ -401,21 +401,15 @@ export const PopularBusinessCard = ({ business }: PopularBusinessCardProps) => {
         </Button>
       </div>
       
-      {/* Green reviews section - positioned at exactly 291px from top */}
+      {/* Green section with See Products button - positioned at exactly 291px from top */}
       <div className="absolute top-[291px] left-0 w-full h-[30px] bg-green-600 flex items-center justify-between px-4 z-10">
-        <Dialog open={openReviewModal} onOpenChange={(open) => {
-          setOpenReviewModal(open);
-          if (!open) {
-            setShowAuthInReviewModal(false);
-          }
-        }}>
+        <Dialog open={openModal} onOpenChange={setOpenModal}>
           <DialogTrigger asChild>
             <Button 
               variant="ghost" 
               className="flex items-center gap-1 text-white hover:bg-white/20 p-1 h-auto"
             >
-              <Star className="w-3 h-3 fill-white" />
-              <span className="text-xs font-medium">REVIEWS</span>
+              <span className="text-xs font-medium">SEE PRODUCTS</span>
             </Button>
           </DialogTrigger>
         </Dialog>
@@ -429,6 +423,34 @@ export const PopularBusinessCard = ({ business }: PopularBusinessCardProps) => {
           )}
         </div>
       </div>
+      
+      {/* Hidden dialog for products functionality */}
+      <Dialog open={openModal} onOpenChange={setOpenModal}>
+        <DialogTrigger asChild>
+          <div style={{ display: 'none' }}>
+            <Button>SEE PRODUCTS</Button>
+          </div>
+        </DialogTrigger>
+        <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{business.name} - Products Catalog</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            {parseProductsCatalog(business.products_catalog).length > 0 ? (
+              parseProductsCatalog(business.products_catalog).map((product: string, index: number) => (
+                <div key={index} className="flex items-center space-x-2 p-3 bg-muted/50 rounded-lg">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span className="text-sm">{product}</span>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>No products catalog available</p>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
       
       {/* Hidden dialog for reviews functionality */}
       <Dialog open={openReviewModal} onOpenChange={(open) => {
@@ -591,36 +613,23 @@ export const PopularBusinessCard = ({ business }: PopularBusinessCardProps) => {
          </div>
        </CardContent>
        
-       {/* Light gray bottom section with button and social icons */}
+       {/* Light gray bottom section with Reviews button and social icons */}
        <div className="h-[50px] bg-muted rounded-b-lg border-t border-border flex items-center justify-between px-3">
-         <Dialog open={openModal} onOpenChange={setOpenModal}>
+         <Dialog open={openReviewModal} onOpenChange={(open) => {
+           setOpenReviewModal(open);
+           if (!open) {
+             setShowAuthInReviewModal(false);
+           }
+         }}>
            <DialogTrigger asChild>
              <Button 
                variant="outline" 
-               className="h-7 text-xs px-3 bg-[#F5F8FA] hover:bg-[#E8EEF2] border-border"
+               className="h-7 text-xs px-3 bg-[#F5F8FA] hover:bg-[#E8EEF2] border-border flex items-center gap-1"
              >
-               See Products
+               <Star className="w-3 h-3" />
+               Reviews
              </Button>
            </DialogTrigger>
-           <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
-             <DialogHeader>
-               <DialogTitle>{business.name} - Products Catalog</DialogTitle>
-             </DialogHeader>
-             <div className="space-y-3">
-               {parseProductsCatalog(business.products_catalog).length > 0 ? (
-                 parseProductsCatalog(business.products_catalog).map((product: string, index: number) => (
-                   <div key={index} className="flex items-center space-x-2 p-3 bg-muted/50 rounded-lg">
-                     <Check className="w-4 h-4 text-primary" />
-                     <span className="text-sm">{product}</span>
-                   </div>
-                 ))
-               ) : (
-                 <div className="text-center py-8 text-muted-foreground">
-                   <p>No products catalog available</p>
-                 </div>
-               )}
-             </div>
-           </DialogContent>
          </Dialog>
          
           <div className="flex items-center gap-2">
