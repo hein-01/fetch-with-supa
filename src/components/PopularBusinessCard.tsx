@@ -406,10 +406,10 @@ export const PopularBusinessCard = ({ business }: PopularBusinessCardProps) => {
         <Dialog open={openModal} onOpenChange={setOpenModal}>
           <DialogTrigger asChild>
             <Button 
-              variant="ghost" 
-              className="flex items-center gap-1 text-white hover:bg-white/20 p-1 h-auto"
+              variant="outline" 
+              className="h-7 text-xs px-3 bg-[#F5F8FA] hover:bg-[#E8EEF2] border-border"
             >
-              <span className="text-xs font-medium">SEE PRODUCTS</span>
+              See Products List
             </Button>
           </DialogTrigger>
         </Dialog>
